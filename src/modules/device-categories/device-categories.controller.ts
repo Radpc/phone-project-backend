@@ -8,6 +8,7 @@ import {
   Delete,
   InternalServerErrorException,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { DeviceCategoriesService } from './device-categories.service';
 import { CreateDeviceCategoryDto } from './dto/create-device-category.dto';
@@ -18,6 +19,7 @@ import {
 } from 'src/utils/success-response';
 import { DeviceCategoryDTO } from './dto/device-category.dto';
 import { ListDeviceCategoryQueryDTO } from './dto/list-device-category-query.dto';
+import { ServiceError, ServiceErrorType } from 'src/utils/service-error';
 
 @Controller('device-categories')
 export class DeviceCategoriesController {
@@ -61,10 +63,20 @@ export class DeviceCategoriesController {
 
   @Get(':id')
   async findOne(
-    @Param('id') id: string,
+    @Param('id') id: number,
   ): Promise<SuccessResponse<DeviceCategoryDTO>> {
-    const res = await this.deviceCategoriesService.findOne(+id);
-    return { data: res.data.toDTO(), message: 'success' };
+    try {
+      const res = await this.deviceCategoriesService.findOne(+id);
+      return { data: res.data.toDTO(), message: 'success' };
+    } catch (err) {
+      if (err instanceof ServiceError) {
+        switch (err.type) {
+          case ServiceErrorType.NotFound:
+            throw new NotFoundException('Categoria não encontrada');
+        }
+      }
+      throw new InternalServerErrorException();
+    }
   }
 
   @Patch(':id')

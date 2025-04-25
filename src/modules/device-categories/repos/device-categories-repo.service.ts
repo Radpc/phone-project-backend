@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   DeviceCategoriesRepoInterface,
   ICreateDeviceCategory,
@@ -8,6 +8,7 @@ import {
 import { DeviceCategory } from '../entities/device-category.entity';
 import { PrismaService } from '../../../modules/prisma/prisma.service';
 import { Prisma } from 'generated/prisma';
+import { ServiceError, ServiceErrorType } from 'src/utils/service-error';
 
 @Injectable()
 export class DeviceCategoriesRepoService
@@ -26,9 +27,16 @@ export class DeviceCategoriesRepoService
   }
 
   async get(deviceCategoryId: number): Promise<{ data: DeviceCategory }> {
-    const res = await this.prisma.deviceCategory.findUniqueOrThrow({
+    const res = await this.prisma.deviceCategory.findUnique({
       where: { id: deviceCategoryId },
     });
+
+    if (!res) {
+      throw new ServiceError(
+        'Device category not found',
+        ServiceErrorType.NotFound,
+      );
+    }
 
     return { data: DeviceCategory.fromRaw(res) };
   }
