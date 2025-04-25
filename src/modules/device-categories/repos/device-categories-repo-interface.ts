@@ -1,4 +1,4 @@
-import { PaginatedQuery } from 'src/utils/pagination-types';
+import { PaginatedQuery } from '../../../utils/pagination-types';
 import { CreateDeviceCategoryDto } from '../dto/create-device-category.dto';
 import { UpdateDeviceCategoryDto } from '../dto/update-device-category.dto';
 import { DeviceCategory } from '../entities/device-category.entity';

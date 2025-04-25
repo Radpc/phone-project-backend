@@ -6,8 +6,8 @@ import {
   IUpdateDeviceCategory,
 } from './device-categories-repo-interface';
 import { DeviceCategory } from '../entities/device-category.entity';
-import { PrismaService } from 'src/modules/prisma/prisma.service';
-import { Prisma } from 'src/generated/prisma';
+import { PrismaService } from '../../../modules/prisma/prisma.service';
+import { Prisma } from 'generated/prisma';
 
 @Injectable()
 export class DeviceCategoriesRepoService
