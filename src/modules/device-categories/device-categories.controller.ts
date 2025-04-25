@@ -1,34 +1,88 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  InternalServerErrorException,
+  Query,
+} from '@nestjs/common';
 import { DeviceCategoriesService } from './device-categories.service';
 import { CreateDeviceCategoryDto } from './dto/create-device-category.dto';
 import { UpdateDeviceCategoryDto } from './dto/update-device-category.dto';
+import {
+  SuccessPaginatedResponse,
+  SuccessResponse,
+} from 'src/utils/success-response';
+import { DeviceCategoryDTO } from './dto/device-category.dto';
+import { ListDeviceCategoryQueryDTO } from './dto/list-device-category-query.dto';
 
 @Controller('device-categories')
 export class DeviceCategoriesController {
-  constructor(private readonly deviceCategoriesService: DeviceCategoriesService) {}
+  constructor(
+    private readonly deviceCategoriesService: DeviceCategoriesService,
+  ) {}
 
   @Post()
-  create(@Body() createDeviceCategoryDto: CreateDeviceCategoryDto) {
-    return this.deviceCategoriesService.create(createDeviceCategoryDto);
+  async create(
+    @Body() createDeviceCategoryDto: CreateDeviceCategoryDto,
+  ): Promise<SuccessResponse<DeviceCategoryDTO>> {
+    try {
+      const res = await this.deviceCategoriesService.create(
+        createDeviceCategoryDto,
+      );
+      return { data: res.data.toDTO(), message: 'success' };
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 
   @Get()
-  findAll() {
-    return this.deviceCategoriesService.findAll();
+  async findAll(
+    @Query() query: ListDeviceCategoryQueryDTO,
+  ): Promise<SuccessPaginatedResponse<DeviceCategoryDTO>> {
+    try {
+      const res = await this.deviceCategoriesService.findAll({
+        page: query.page,
+        pageSize: query.pageSize,
+        searchBy: query.searchBy,
+      });
+
+      return {
+        data: { items: res.data.map((r) => r.toDTO()), total: res.total },
+        message: 'success',
+      };
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.deviceCategoriesService.findOne(+id);
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<SuccessResponse<DeviceCategoryDTO>> {
+    const res = await this.deviceCategoriesService.findOne(+id);
+    return { data: res.data.toDTO(), message: 'success' };
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDeviceCategoryDto: UpdateDeviceCategoryDto) {
-    return this.deviceCategoriesService.update(+id, updateDeviceCategoryDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateDeviceCategoryDto: UpdateDeviceCategoryDto,
+  ): Promise<SuccessResponse<DeviceCategoryDTO>> {
+    const res = await this.deviceCategoriesService.update(+id, {
+      name: updateDeviceCategoryDto.name,
+    });
+    return { data: res.data.toDTO(), message: 'success' };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.deviceCategoriesService.remove(+id);
+  async remove(
+    @Param('id') id: string,
+  ): Promise<SuccessResponse<DeviceCategoryDTO>> {
+    const res = await this.deviceCategoriesService.remove(+id);
+    return { data: res.data.toDTO(), message: 'success' };
   }
 }
