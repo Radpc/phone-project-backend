@@ -6,9 +6,7 @@ import { Device } from '../entities/device.entity';
 export type ICreateDevice = CreateDeviceDto;
 export type IUpdateDevice = UpdateDeviceDto;
 
-export interface IListDeviceParams extends PaginatedQuery {
-  searchBy?: string;
-}
+export type IListDeviceParams = PaginatedQuery;
 
 export interface DevicesRepoInterface {
   create(payload: ICreateDevice): Promise<{ data: Device }>;

@@ -41,7 +41,7 @@ export class DevicesRepoService implements DevicesRepoInterface {
   async list(
     params: IListDeviceParams,
   ): Promise<{ data: Device[]; total: number }> {
-    const { page, pageSize, searchBy } = params;
+    const { page, pageSize } = params;
     const take = pageSize;
     const skip = (page - 1) * take;
 

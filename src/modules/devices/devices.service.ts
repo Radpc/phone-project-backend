@@ -1,26 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import {
+  DevicesRepoInterface,
+  IListDeviceParams,
+} from './repos/devices-repo-interface';
 
 @Injectable()
 export class DevicesService {
-  create(createDeviceDto: CreateDeviceDto) {
-    return 'This action adds a new device';
+  constructor(
+    @Inject('IDevicesRepo')
+    private readonly deviceCategoryRepo: DevicesRepoInterface,
+  ) {}
+
+  async create(createDeviceDto: CreateDeviceDto) {
+    const repoRes = await this.deviceCategoryRepo.create(createDeviceDto);
+    return repoRes;
   }
 
-  findAll() {
-    return `This action returns all devices`;
+  async findAll(params: IListDeviceParams) {
+    const repoRes = await this.deviceCategoryRepo.list(params);
+    return repoRes;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} device`;
+  async findOne(deviceId: number) {
+    const repoRes = await this.deviceCategoryRepo.get(deviceId);
+    return repoRes;
   }
 
-  update(id: number, updateDeviceDto: UpdateDeviceDto) {
-    return `This action updates a #${id} device`;
+  async update(deviceId: number, updateDeviceDto: UpdateDeviceDto) {
+    const repoRes = await this.deviceCategoryRepo.update(
+      deviceId,
+      updateDeviceDto,
+    );
+    return repoRes;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} device`;
+  async remove(deviceId: number) {
+    const repoRes = await this.deviceCategoryRepo.delete(deviceId);
+    return repoRes;
   }
 }
