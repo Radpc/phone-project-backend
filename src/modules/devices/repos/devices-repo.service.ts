@@ -8,7 +8,7 @@ import {
 import { Device } from '../entities/device.entity';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { ServiceError, ServiceErrorType } from 'src/utils/service-error';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from '../../../../generated/prisma';
 
 @Injectable()
 export class DevicesRepoService implements DevicesRepoInterface {

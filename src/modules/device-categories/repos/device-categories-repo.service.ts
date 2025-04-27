@@ -7,7 +7,7 @@ import {
 } from './device-categories-repo-interface';
 import { DeviceCategory } from '../entities/device-category.entity';
 import { PrismaService } from '../../../modules/prisma/prisma.service';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from '../../../../generated/prisma';
 import { ServiceError, ServiceErrorType } from 'src/utils/service-error';
 
 @Injectable()
