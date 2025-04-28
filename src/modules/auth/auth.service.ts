@@ -20,15 +20,18 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn(
-    username: string,
-    pass: string,
-  ): Promise<{ access_token: string }> {
-    const user = await this.usersService.findByUsername(username);
+  async signIn(email: string, pass: string): Promise<{ access_token: string }> {
+    let user: User;
 
-    if (!user.checkPassword(pass)) {
+    try {
+      user = await this.usersService.findByEmail(email);
+      if (!user?.checkPassword(pass)) {
+        throw new Error();
+      }
+    } catch (err) {
       throw new UnauthorizedException();
     }
+
     const payload: IUserJWT = createJWTPayload(user);
 
     return {

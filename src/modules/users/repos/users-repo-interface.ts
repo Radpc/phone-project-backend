@@ -12,6 +12,7 @@ export interface UsersRepoInterface {
   create(payload: ICreateUser): Promise<{ data: User }>;
   update(userId: number, payload: IUpdateUser): Promise<{ data: User }>;
   get(userId: number): Promise<{ data: User }>;
+  getByEmail(email: string): Promise<{ data: User }>;
   list(params: IListUsersParams): Promise<{ data: User[]; total: number }>;
   delete(userId: number): Promise<{ data: User }>;
 }
