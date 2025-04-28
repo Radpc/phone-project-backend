@@ -12,7 +12,7 @@ async function bootstrap() {
     .setTitle('Device API')
     .setDescription('An API made for an entrance project')
     .setVersion('1.0')
-    .addTag('device')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

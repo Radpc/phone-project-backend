@@ -8,10 +8,10 @@ import { AuthModule } from './modules/auth/auth.module';
 @Module({
   imports: [
     PrismaModule,
+    AuthModule,
     UsersModule,
     DevicesModule,
     DeviceCategoriesModule,
-    AuthModule,
   ],
   controllers: [],
   providers: [],
