@@ -20,7 +20,6 @@ export class Device {
   color: string;
   partNumber: number;
   category: DeviceCategory | undefined;
-
   createdAt: Date;
   updatedAt: Date;
 
