@@ -4,6 +4,7 @@ interface ServiceErrorOptions {
 
 export enum ServiceErrorType {
   NotFound,
+  CannotProceed,
 }
 
 export class ServiceError extends Error {

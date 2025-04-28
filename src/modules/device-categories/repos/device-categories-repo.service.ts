@@ -88,6 +88,17 @@ export class DeviceCategoriesRepoService
   }
 
   async delete(deviceCategoryId: number): Promise<{ data: DeviceCategory }> {
+    if (
+      await this.prisma.deviceCategory.findUnique({
+        where: { id: deviceCategoryId, Device: { some: {} } },
+      })
+    ) {
+      throw new ServiceError(
+        'Device category is related to an already existing device',
+        ServiceErrorType.CannotProceed,
+      );
+    }
+
     const res = await this.prisma.deviceCategory.delete({
       where: { id: deviceCategoryId },
     });

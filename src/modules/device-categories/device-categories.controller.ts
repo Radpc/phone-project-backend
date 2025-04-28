@@ -9,6 +9,7 @@ import {
   InternalServerErrorException,
   Query,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { DeviceCategoriesService } from './device-categories.service';
 import { CreateDeviceCategoryDto } from './dto/create-device-category.dto';
@@ -94,7 +95,17 @@ export class DeviceCategoriesController {
   async remove(
     @Param('id') id: string,
   ): Promise<SuccessResponse<DeviceCategoryDTO>> {
-    const res = await this.deviceCategoriesService.remove(+id);
-    return { data: res.data.toDTO(), message: 'success' };
+    try {
+      const res = await this.deviceCategoriesService.remove(+id);
+      return { data: res.data.toDTO(), message: 'success' };
+    } catch (err) {
+      if (err instanceof ServiceError) {
+        switch (err.type) {
+          case ServiceErrorType.CannotProceed:
+            throw new BadRequestException();
+        }
+      }
+      throw new InternalServerErrorException();
+    }
   }
 }
