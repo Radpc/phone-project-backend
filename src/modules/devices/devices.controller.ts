@@ -6,6 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  InternalServerErrorException,
+  NotFoundException,
+  Query,
 } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -15,6 +18,8 @@ import {
   SuccessResponse,
 } from 'src/utils/success-response';
 import { DeviceDTO } from './dto/device.dto';
+import { ServiceError, ServiceErrorType } from 'src/utils/service-error';
+import { PaginatedQuery } from 'src/utils/pagination-types';
 
 @Controller('devices')
 export class DevicesController {
@@ -29,10 +34,12 @@ export class DevicesController {
   }
 
   @Get()
-  async findAll(): Promise<SuccessPaginatedResponse<DeviceDTO>> {
+  async findAll(
+    @Query() query: PaginatedQuery,
+  ): Promise<SuccessPaginatedResponse<DeviceDTO>> {
     const serviceRes = await this.devicesService.findAll({
-      page: 1,
-      pageSize: 10,
+      page: query.page,
+      pageSize: query.pageSize,
     });
     return {
       data: {
@@ -45,8 +52,18 @@ export class DevicesController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const serviceRes = await this.devicesService.findOne(+id);
-    return { data: serviceRes.data.toDTO(), message: 'success' };
+    try {
+      const serviceRes = await this.devicesService.findOne(+id);
+      return { data: serviceRes.data.toDTO(), message: 'success' };
+    } catch (err) {
+      if (err instanceof ServiceError) {
+        switch (err.type) {
+          case ServiceErrorType.NotFound:
+            throw new NotFoundException('Device not found');
+        }
+      }
+      throw new InternalServerErrorException();
+    }
   }
 
   @Patch(':id')

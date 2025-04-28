@@ -72,7 +72,7 @@ export class DeviceCategoriesController {
       if (err instanceof ServiceError) {
         switch (err.type) {
           case ServiceErrorType.NotFound:
-            throw new NotFoundException('Categoria não encontrada');
+            throw new NotFoundException('Category not found');
         }
       }
       throw new InternalServerErrorException();

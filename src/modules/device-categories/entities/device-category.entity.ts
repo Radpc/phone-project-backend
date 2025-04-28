@@ -15,9 +15,11 @@ export class DeviceCategory {
   updatedAt: Date;
 
   constructor(props: IProps) {
-    const { id, name } = props;
+    const { id, name, createdAt, updatedAt } = props;
     this.id = id;
     this.name = name;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   /**

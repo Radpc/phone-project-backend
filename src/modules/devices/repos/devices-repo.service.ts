@@ -33,7 +33,7 @@ export class DevicesRepoService implements DevicesRepoInterface {
     });
 
     if (!res) {
-      throw new ServiceError('Device  not found', ServiceErrorType.NotFound);
+      throw new ServiceError('Device not found', ServiceErrorType.NotFound);
     }
     return { data: Device.fromRaw(res) };
   }
@@ -89,10 +89,16 @@ export class DevicesRepoService implements DevicesRepoInterface {
   }
 
   async delete(deviceId: number): Promise<{ data: Device }> {
-    const res = await this.prisma.device.delete({
-      where: { id: deviceId },
-    });
-
-    return { data: Device.fromRaw(res) };
+    try {
+      const res = await this.prisma.device.delete({
+        where: { id: deviceId },
+      });
+      return { data: Device.fromRaw(res) };
+    } catch (err) {
+      throw new ServiceError(
+        'Device could not be found',
+        ServiceErrorType.NotFound,
+      );
+    }
   }
 }
