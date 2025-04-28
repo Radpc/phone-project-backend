@@ -58,6 +58,7 @@ export class DevicesRepoService implements DevicesRepoInterface {
       skip,
       take,
       where,
+      include: { category: true },
     });
 
     const [countRes, rawRes] = await Promise.all([count, query]);
