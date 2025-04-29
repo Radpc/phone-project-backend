@@ -7,9 +7,35 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    await prisma.user.createMany({ data: userSeed });
-    await prisma.deviceCategory.createMany({ data: deviceCategorySeed });
-    await prisma.device.createMany({ data: deviceSeed });
+    await Promise.allSettled(
+      userSeed.map((u) =>
+        prisma.user.upsert({
+          where: { id: u.id },
+          create: u,
+          update: {},
+        }),
+      ),
+    );
+
+    await Promise.allSettled(
+      deviceCategorySeed.map((u) =>
+        prisma.deviceCategory.upsert({
+          where: { id: u.id },
+          create: u,
+          update: {},
+        }),
+      ),
+    );
+
+    await Promise.allSettled(
+      deviceSeed.map((u) =>
+        prisma.device.upsert({
+          where: { id: u.id },
+          create: u,
+          update: {},
+        }),
+      ),
+    );
   } catch (error) {
     console.log(error);
   }
