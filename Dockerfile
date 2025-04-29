@@ -18,11 +18,8 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-RUN ["chmod", "+x", "./entrypoint.sh"]
-
 # Expose the port that your NestJS app runs on
 EXPOSE 3000
 
 # Define the command to run your app
-
-ENTRYPOINT [ "./entrypoint.sh" ]
+CMD [ "npm", "run", "start:migrate:prod" ]
