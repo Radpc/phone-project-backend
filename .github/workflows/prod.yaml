@@ -35,12 +35,4 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} \\
-          'if sudo docker ps -q --filter "status=running" | grep -q .; then \\
-            sudo docker stop $(sudo docker ps -q --filter "status=running"); \\
-          fi && \\
-          if sudo docker ps -a -q | grep -q .; then \\
-            sudo docker rm $(sudo docker ps -a -q); \\
-          fi && \\
-          sudo docker pull radpc/phone-backend && \\
-          sudo docker run -d -p 80:80 radpc/phone-backend && \\
-          sudo docker image prune -f'
+          'if sudo docker ps -q --filter "status=running" | grep -q .; then sudo docker stop $(sudo docker ps -q --filter "status=running"); fi && if sudo docker ps -a -q | grep -q .; then sudo docker rm $(sudo docker ps -a -q); fi && sudo docker pull radpc/phone-backend && sudo docker run -d -p 80:80 radpc/phone-backend && sudo docker image prune -f'
