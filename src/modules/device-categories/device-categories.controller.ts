@@ -10,6 +10,7 @@ import {
   Query,
   NotFoundException,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { DeviceCategoriesService } from './device-categories.service';
 import { CreateDeviceCategoryDto } from './dto/create-device-category.dto';
@@ -21,6 +22,8 @@ import {
 import { DeviceCategoryDTO } from './dto/device-category.dto';
 import { ListDeviceCategoryQueryDTO } from './dto/list-device-category-query.dto';
 import { ServiceError, ServiceErrorType } from 'src/utils/service-error';
+import { AuthGuard } from '../auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('device-categories')
 export class DeviceCategoriesController {
@@ -28,6 +31,8 @@ export class DeviceCategoriesController {
     private readonly deviceCategoriesService: DeviceCategoriesService,
   ) {}
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Post()
   async create(
     @Body() createDeviceCategoryDto: CreateDeviceCategoryDto,
@@ -42,6 +47,8 @@ export class DeviceCategoriesController {
     }
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Get()
   async findAll(
     @Query() query: ListDeviceCategoryQueryDTO,
@@ -62,6 +69,8 @@ export class DeviceCategoriesController {
     }
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(
     @Param('id') id: number,
@@ -80,6 +89,8 @@ export class DeviceCategoriesController {
     }
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -91,6 +102,8 @@ export class DeviceCategoriesController {
     return { data: res.data.toDTO(), message: 'success' };
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async remove(
     @Param('id') id: string,

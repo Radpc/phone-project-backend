@@ -9,6 +9,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -20,11 +21,15 @@ import {
 import { DeviceDTO } from './dto/device.dto';
 import { ServiceError, ServiceErrorType } from 'src/utils/service-error';
 import { PaginatedQuery } from 'src/utils/pagination-types';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('devices')
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Post()
   async create(
     @Body() createDeviceDto: CreateDeviceDto,
@@ -33,6 +38,8 @@ export class DevicesController {
     return { data: serviceRes.data.toDTO(), message: 'success' };
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Get()
   async findAll(
     @Query() query: PaginatedQuery,
@@ -50,6 +57,8 @@ export class DevicesController {
     };
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -66,6 +75,8 @@ export class DevicesController {
     }
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -75,6 +86,8 @@ export class DevicesController {
     return { data: serviceRes.data.toDTO(), message: 'success' };
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const serviceRes = await this.devicesService.remove(+id);
