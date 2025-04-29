@@ -18,6 +18,8 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
+RUN ["chmod", "+x", "./entrypoint.sh"]
+
 # Expose the port that your NestJS app runs on
 EXPOSE 3000
 
