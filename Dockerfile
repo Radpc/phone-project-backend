@@ -16,11 +16,11 @@ COPY . .
 
 # Build the NestJS application
 RUN npx prisma generate
-RUN npx prisma migrate dev
 RUN npm build
 
 # Expose the port that your NestJS app runs on
 EXPOSE 3000
 
 # Define the command to run your app
-CMD ["node", "dist/main"]
+
+ENTRYPOINT [ "/entrypoint.sh" ]
