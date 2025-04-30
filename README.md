@@ -34,3 +34,6 @@ The project has routes and services to `create`, `edit`, `get-by-id` and `list` 
 
 ### Device category module
 The project has routes and services to `create`, `edit`, `get-by-id` and `list` category devices, and some parameters to help the requests.
+
+## Infra
+This project is served in a Docker container, inside an EC2 machine and communicates with an RDS database (see `Device project - Infra` for more info).
